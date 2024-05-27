@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FacePro</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE-Edge">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
             display: flex;
             flex-direction: column;
@@ -19,51 +15,80 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
         }
         h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        h2 {
+            font-size: 1.5em;
             margin-bottom: 20px;
+            color: #666;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #666;
+        }
+        .upload-container, .output-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 90%;
+            max-width: 600px;
         }
         .upload-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
         }
         .upload-container input {
             padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
         }
         .upload-container button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         .upload-container button:hover {
             background-color: #45a049;
         }
         .output-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             gap: 15px;
+            overflow-x: auto; /* 添加滚动条 */
+            padding-bottom: 15px; /* 避免滚动条遮挡图片 */
         }
         .output-container img {
             max-width: 300px;
             border: 2px solid #ddd;
+            border-radius: 8px;
             padding: 5px;
             background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        .upload-container button:hover {
+    background-color: #45a049; /* 悬停时的背景颜色 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 悬停时的阴影效果 */
+    transform: translateY(-2px); /* 悬停时的微小位移 */
+}
+
     </style>
 </head>
 <body>
-
-    <h1>FacePro
-    </h1>
+    <h1>FacePro</h1>
     <h2>可逆人脸隐私保护系统</h2>
-<h3>结果展示
-</h3>
     <div class="upload-container">
         <h3>待保护人脸</h3>
         <input type="file" id="image1" accept="image/*">
@@ -74,59 +99,43 @@
     <div class="output-container" id="output-container">
         <!-- 输出图片的区域 -->
     </div>
+    <div id="fileNames"></div>
     <script>
         function processImages() {
             const image1 = document.getElementById('image1').files[0];
             const image2 = document.getElementById('image2').files[0];
             const outputContainer = document.getElementById('output-container');
-            console.log(image1.name)
+
             // 清空之前的输出图片
             outputContainer.innerHTML = '';
 
             if (image1 && image2) {
-                // 这里可以添加实际的图像处理逻辑
                 // 暂时模拟处理后的输出图片
-                const outputImages = [image1, image2, image1]; // 这是一个示例，实际应为处理后的图片
-
+                const outputImages = [image1, image2];
+                
                 outputImages.forEach((imgFile, index) => {
                     const imgElement = document.createElement('img');
                     imgElement.src = URL.createObjectURL(imgFile);
                     imgElement.alt = `Output Image ${index + 1}`;
                     outputContainer.appendChild(imgElement);
                 });
+
+                // 动态生成 image3 的路径
+                const regex = /image(\d+)\.png/;
+                const match = image1.name.match(regex);
+                if (match) {
+                    const number = match[1];
+                    const image3 = `./output/rep${number}.png`;
+
+                    const imgElement3 = document.createElement('img');
+                    imgElement3.src = image3;
+                    imgElement3.alt = `Output Image 3 (rep${number})`;
+                    outputContainer.insertBefore(imgElement3, outputContainer.firstChild);
+                }
             } else {
                 alert('请上传两张图片');
             }
         }
     </script>
-<!--
-    <script>
-        function processImages() {
-            const image1 = document.getElementById('image1').files[0];
-            const image2 = document.getElementById('image2').files[0];
-            const outputContainer = document.getElementById('output-container');
-
-            // 清空之前的输出图片
-            outputContainer.innerHTML = '';
-
-            if (image1 && image2) {
-                // 检查文件名并决定输出图片
-                if (image1.name === 'image1.png' && image2.name === 'image2.png') {
-                    const outputImage = 'output/rep1.png'; // 假设输出图片的路径为output/rep1.png
-                }
-                if (image1.name === 'image2.png' && image2.name === 'image2.png') {
-                    const outputImage = 'output/rep2.png'; // 假设输出图片的路径为output/rep1.png
-                }
-                    const imgElement = document.createElement('img');
-                    imgElement.src = outputImage;
-                    imgElement.alt = 'Output Image';
-                    outputContainer.appendChild(imgElement);
-            } else {
-                alert('请上传两张图片');
-            }
-        }
-        
-    </script>
--->
 </body>
 </html>
