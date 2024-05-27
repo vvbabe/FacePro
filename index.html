@@ -66,9 +66,11 @@
         }
         .output-container {
             display: flex;
+            flex-direction: column;
             gap: 15px;
             overflow-x: auto; /* 添加滚动条 */
             padding-bottom: 15px; /* 避免滚动条遮挡图片 */
+            align-items: center;
         }
         .output-container img {
             max-width: 300px;
@@ -79,27 +81,40 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .upload-container button:hover {
-    background-color: #45a049; /* 悬停时的背景颜色 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 悬停时的阴影效果 */
-    transform: translateY(-2px); /* 悬停时的微小位移 */
-}
-
+            background-color: #45a049; /* 悬停时的背景颜色 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 悬停时的阴影效果 */
+            transform: translateY(-2px); /* 悬停时的微小位移 */
+        }
+        .save-button {
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+        .save-button:hover {
+            background-color: #007BB5;
+        }
     </style>
 </head>
 <body>
     <h1>FacePro</h1>
     <h2>可逆人脸隐私保护系统</h2>
+    <a href="recover.html">若需恢复图像，请点击这里</a>
     <div class="upload-container">
         <h3>待保护人脸</h3>
         <input type="file" id="image1" accept="image/*">
-        <h3>覆盖人脸</h3>
+        <h3>替换人脸</h3>
         <input type="file" id="image2" accept="image/*">
         <button onclick="processImages()">提交</button>
     </div>
     <div class="output-container" id="output-container">
         <!-- 输出图片的区域 -->
     </div>
-    <div id="fileNames"></div>
     <script>
         function processImages() {
             const image1 = document.getElementById('image1').files[0];
@@ -131,6 +146,15 @@
                     imgElement3.src = image3;
                     imgElement3.alt = `Output Image 3 (rep${number})`;
                     outputContainer.insertBefore(imgElement3, outputContainer.firstChild);
+
+                    // 创建保存按钮
+                    const saveButton = document.createElement('a');
+                    saveButton.href = image3;
+                    saveButton.download = `rep${number}.png`;
+                    saveButton.className = 'save-button';
+                    saveButton.innerText = '保存 Image 3';
+                    outputContainer.insertBefore(saveButton, outputContainer.firstChild);
+                    outputContainer.appendChild();
                 }
             } else {
                 alert('请上传两张图片');
